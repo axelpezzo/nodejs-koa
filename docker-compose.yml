@@ -1,0 +1,45 @@
+services:
+  nodejs_be_1: # Definisce il servizio per il backend Node.js
+    container_name: nodejs_be_1 # Nome del container
+    build:
+      dockerfile: Dockerfile # Specifica il Dockerfile per costruire l'immagine
+    restart: unless-stopped # Riavvia il container a meno che non venga fermato manualmente
+    environment:
+      - CHOKIDAR_USEPOLLING=1 # Imposta una variabile d'ambiente per il container
+      - DATABASE_URL=postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@nodejs_db_1:5432/${DATABASE_NAME} # Imposta la variabile d'ambiente per la connessione al database
+    ports:
+      - 3000:3000 # Mappa la porta 3000 del container alla porta 3000 dell'host
+    networks:
+      - nodejs_net_1 # Collega il container alla rete nodejs_net_1
+    volumes:
+      - .:/app # Monta la directory corrente come volume nel container
+    depends_on:
+      nodejs_db_1: # Specifica che questo servizio dipende dal servizio nodejs_db_1
+        condition: service_healthy # Condizione di dipendenza: il servizio nodejs_db_1 deve essere in stato "healthy"
+
+  nodejs_db_1: # Definisce il servizio per il database PostgreSQL
+    container_name: nodejs_db_1 # Nome del container
+    platform: linux/amd64 # Specifica la piattaforma del container
+    restart: unless-stopped # Riavvia il container a meno che non venga fermato manualmente
+    image: postgres:17.2-alpine # Utilizza l'immagine postgres:17.2-alpine
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME} # Imposta la variabile d'ambiente POSTGRES_USER
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD} # Imposta la variabile d'ambiente POSTGRES_PASSWORD
+      POSTGRES_DB: ${DATABASE_NAME} # Imposta la variabile d'ambiente POSTGRES_DB
+    volumes:
+      - nodejs-data-1:/var/lib/postgresql/data/ # Monta un volume per i dati del database
+    ports:
+      - "5432:5432" # Mappa la porta 5432 del container alla porta 5432 dell'host
+    networks:
+      - nodejs_net_1 # Collega il container alla rete nodejs_net_1
+    healthcheck: # Definisce un healthcheck per il servizio
+      test: ["CMD", "pg_isready", "-U", "nodejs_db_1"] # Comando per verificare la salute del servizio
+      interval: 5s # Intervallo tra i controlli di salute
+      retries: 5 # Numero di tentativi prima di considerare il servizio non sano
+
+volumes:
+  nodejs-data-1: # Definisce un volume per i dati del database
+
+networks:
+  nodejs_net_1: # Definisce una rete per i servizi
+    name: nodejs_net_1 # Nome della rete

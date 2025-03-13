@@ -1,0 +1,36 @@
+{
+  "name": "corso_node",
+  "version": "1.0.0",
+  "description": "Questa è un'applicazione in node",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -L index.js",
+    "dev:docker": "docker-compose -f docker-compose.yml up",
+    "dev:docker:build": "docker-compose -f docker-compose.yml up --build"
+  },
+  "author": "me",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/bodyparser": "^5.1.1",
+    "@koa/router": "^13.1.0",
+    "@prisma/client": "^6.4.1",
+    "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "koa": "^2.16.0",
+    "pg": "^8.13.3",
+    "prisma": "^6.4.1",
+    "tsx": "^4.19.3",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/koa__router": "^12.0.4",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/node": "^22.13.10",
+    "eslint": "^9.22.0",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.2"
+  }
+}
