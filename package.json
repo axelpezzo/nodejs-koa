@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -L index.js",
+    "dev": "nodemon -L index.ts",
     "dev:docker": "docker-compose -f docker-compose.yml up",
     "dev:docker:build": "docker-compose -f docker-compose.yml up --build"
   },
